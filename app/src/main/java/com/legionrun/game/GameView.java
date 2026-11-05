@@ -30,7 +30,7 @@ public class GameView extends View {
   for(int i=0;i<Math.min(crowd,36);i++){float row=i/6, col=i%6;float x=w*(playerX-.12f+col*.048f+(row%2)*.018f);float y=h*.78f+row*7;float r=Math.max(4,10-row*.7f);paint(c,color("#F3C969"));c.drawCircle(x,y,r,p);paint(c,color("#2679C8"));c.drawRoundRect(x-r*.8f,y,x+r*.8f,y+r*1.7f,4,4,p);}
   paint(c,0xCC0B1425);c.drawRoundRect(24,28,w-24,116,28,28,p);
   p.setColor(Color.WHITE);p.setTextSize(22);p.setTypeface(Typeface.create("sans-serif",Typeface.BOLD));c.drawText("LEGION RUN",44,62,p);
-  p.setTextSize(15);p.drawText("LEVEL "+level+"     SQUAD "+crowd,44,94,p);
+  p.setTextSize(15);c.drawText("LEVEL "+level+"     SQUAD "+crowd,44,94,p);
   paint(c,color("#FFFFFF"));c.drawRoundRect(28,132,w-28,143,8,8,p);paint(c,color("#20C987"));c.drawRoundRect(28,132,28+(w-56)*Math.min(1,progress),143,8,8,p);
   if(!running){paint(c,0xD9000000);c.drawRect(0,0,w,h,p);p.setColor(Color.WHITE);p.setTextAlign(Paint.Align.CENTER);p.setTextSize(32);p.setTypeface(Typeface.DEFAULT_BOLD);c.drawText(won?"LEVEL COMPLETE!":lost?"TRY AGAIN":"LEGION RUN",w/2,h*.42f,p);p.setTextSize(18);c.drawText(won?"Your squad survived: "+crowd:"Tap to play",w/2,h*.49f,p);p.setTextAlign(Paint.Align.LEFT);}
   if(running){long now=System.currentTimeMillis();if(last!=0){float dt=Math.min(.05f,(now-last)/1000f);progress+=dt*.105f;if(progress>=1){running=false;won=crowd>=8;lost=!won;if(won)score+=crowd*10;}}last=now;postInvalidateDelayed(16);}
