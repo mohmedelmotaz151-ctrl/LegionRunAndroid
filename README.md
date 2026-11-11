@@ -1,8 +1,14 @@
-# Legion Run — Android prototype
+# Legion Run
 
-Native Android crowd-runner prototype with stage progression, swipe steering, squad count, gates, hazards, and offline play. Stylized pseudo-3D rendering using Android Canvas.
+This repository contains two preserved implementations:
 
-## Build APK
-Open **Actions** → **Build Legion Run APK** → **Run workflow**. When complete, download the `LegionRun-debug-apk` artifact and install `app-debug.apk`.
+- **Godot 4 3D prototype** — open `godot/project.godot` in Godot 4.4+. See [godot/README.md](godot/README.md).
+- **Original Android prototype** — native Android Canvas implementation under `app/`, retained while the 3D version is developed.
 
-This is an early playable prototype, not a finished 3D production game.
+## 3D project
+The Godot project is the new development direction. It currently includes a perspective 3D runner scene, a procedural squad, lane switching, add/multiply gates, hazards, a finish encounter, and a validation workflow.
+
+## Original Android prototype APK
+Open **Actions** → **Build Legion Run APK** and download the `LegionRun-debug-apk` artifact from a successful run.
+
+The Godot project is an early playable foundation, not yet a finished commercial-quality game or a signed Android/iOS release.
