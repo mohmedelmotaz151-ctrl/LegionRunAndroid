@@ -29,7 +29,6 @@ func _ready() -> void:
 	_build_world()
 	_build_ui()
 	_build_squad()
-	_spawn_gate(-18.0, -2, 2, 2)
 	_spawn_gate(-18.0, 2, 3, 1)
 	_spawn_hazard(-35.0, 0)
 	_update_hud()
@@ -80,7 +79,7 @@ func _build_world() -> void:
 
 	camera = Camera3D.new()
 	camera.position = Vector3(0, 7.8, 12.5)
-	camera.rotation_degrees = Vector3(-24.0, 0.0, 0.0)
+	camera.rotation_degrees = Vector3(24.0, 0.0, 0.0)
 	camera.current = true
 	camera.fov = 62.0
 	add_child(camera)
@@ -138,7 +137,7 @@ func _build_ui() -> void:
 	message_label.add_theme_constant_override("shadow_offset_x", 2)
 	message_label.add_theme_constant_override("shadow_offset_y", 3)
 	layer.add_child(message_label)
-	message_label.text = "SWIPE TO MOVE"
+	message_label.text = ""
 
 	restart_button = Button.new()
 	restart_button.text = "PLAY AGAIN"
@@ -283,7 +282,9 @@ func _spawn_finish() -> void:
 	finish_spawned = true
 	var finish := Node3D.new()
 	finish.position.z = -FINISH_DISTANCE
+	finish.set_meta("finish", true)
 	add_child(finish)
+	moving_objects.append(finish)
 	var banner := MeshInstance3D.new()
 	var banner_mesh := BoxMesh.new()
 	banner_mesh.size = Vector3(ROAD_WIDTH, 0.35, 0.35)
@@ -299,8 +300,7 @@ func _spawn_finish() -> void:
 	finish.add_child(label)
 	for i in range(12):
 		var enemy := _make_soldier(Color(0.72, 0.12, 0.16), Color(0.25, 0.04, 0.06))
-		enemy.position = Vector3((float(i % 6) - 2.5) * 0.8, 0, -FINISH_DISTANCE - 2.0 - float(i / 6) * 1.2)
-		add_child(enemy)
+		enemy.position = Vector3((float(i % 6) - 2.5) * 0.8, 0, -2.0 - float(i / 6) * 1.2)
 		finish.add_child(enemy)
 
 func _input(event: InputEvent) -> void:
@@ -341,14 +341,15 @@ func _process(delta: float) -> void:
 		if obj.position.z >= -0.5 and obj.position.z <= RUN_SPEED * delta + 0.2:
 			if obj.get_child_count() > 0 and obj.get_child(0).has_meta("lane"):
 				_apply_gate(obj)
-			elif absf(obj.position.x - squad_root.position.x) < 1.35:
+				continue
+			elif not obj.has_meta("finish") and absf(obj.position.x - squad_root.position.x) < 1.35:
 				_end_game(false, "SQUAD HIT!\nTRY ANOTHER ROUTE")
+				return
 		if obj.position.z > 18.0:
 			moving_objects.erase(obj)
 			obj.queue_free()
 	if distance >= spawn_gate_at:
-		var choice := randi_range(1, 3)
-		_spawn_gate(-70.0, choice, randi_range(1, 4), 1 if randi_range(0, 1) == 0 else 2)
+		_spawn_gate(-70.0, randi_range(1, 3), randi_range(1, 4), 1 if randi_range(0, 1) == 0 else 2)
 		spawn_gate_at += 42.0
 	if distance >= spawn_hazard_at:
 		_spawn_hazard(-72.0, randi_range(-1, 1))
