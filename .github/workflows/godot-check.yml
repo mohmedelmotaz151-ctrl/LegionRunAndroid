@@ -1,0 +1,25 @@
+name: Validate Legion Run 3D
+
+on:
+  push:
+    paths:
+      - "godot/**"
+      - ".github/workflows/godot-check.yml"
+  pull_request:
+    paths:
+      - "godot/**"
+      - ".github/workflows/godot-check.yml"
+  workflow_dispatch:
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    container:
+      image: barichello/godot-ci:4.4.1
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+      - name: Import project
+        run: godot --headless --path godot --editor --quit
+      - name: Run scene smoke test
+        run: godot --headless --path godot --quit-after 5
