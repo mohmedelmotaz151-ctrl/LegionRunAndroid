@@ -1,0 +1,30 @@
+name: Build Legion Run 3D APK
+
+on:
+  push:
+    paths:
+      - "godot/**"
+      - ".github/workflows/godot-android.yml"
+  workflow_dispatch:
+
+jobs:
+  export-android:
+    runs-on: ubuntu-latest
+    container:
+      image: barichello/godot-ci:4.4.1
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+      - name: Import Godot project
+        run: godot --headless --path godot --editor --quit
+      - name: Export debug APK
+        run: |
+          mkdir -p godot/build
+          godot --headless --path godot --export-debug "Android" build/LegionRun3D-debug.apk
+      - name: Upload 3D APK
+        uses: actions/upload-artifact@v4
+        with:
+          name: LegionRun3D-debug-apk
+          path: godot/build/LegionRun3D-debug.apk
+          if-no-files-found: error
+          retention-days: 14
